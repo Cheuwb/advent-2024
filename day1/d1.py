@@ -20,8 +20,25 @@ with open('input', 'r') as file:
 
     #part2
     score2 = 0
-    for number in column1:
-        count_in_column2 = column2.count(number)
-        score2 += int(number) * count_in_column2
-    
+    p1 = 0
+    p2 = 0
+
+    while p1 < len(column1) and p2 < len(column2):
+        #equal value, count the number of times it shows up in column2
+        if column1[p1] == column2[p2]:
+            count_in_column2 = 0
+            #counting in column2
+            while p2 < len(column2) and column2[p2] == column1[p1]:
+                count_in_column2 += 1
+                p2 += 1
+            #score after calculating
+            score2 += int(column1[p1]) * count_in_column2
+            #next number in column1
+            p1 += 1
+        #shift the pointers when they are not equal
+        elif column1[p1] < column2[p2]:
+            p1 += 1
+        else:
+            p2 += 1
+
     print(score2)
