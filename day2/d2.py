@@ -4,11 +4,21 @@
 
 #find how many reports are safe x
 
-with open('input', 'r') as file:
-    safe_count = 0
-    for reports in file:
-        level = list(map(int, reports.split()))
 
+def main():
+    with open('input', 'r') as file:
+        count_safe_reports(file)
+
+
+def count_safe_reports(file):
+    safe_count = 0
+    for report in file:
+        level = list(map(int, report.split()))
+        if (check_level(level) or check_with_removal(level)):
+            safe_count += 1
+    print(safe_count)
+
+def check_level(level):
         for i in range(len(level)-1):
             current_level = level[i]
             next_level = level[i+1]            
@@ -24,6 +34,20 @@ with open('input', 'r') as file:
 
             # Last middle element in the list
             if (i == len(level)-2):
-                safe_count += 1
+                return True
+            
+        return False
 
-    print(safe_count)
+# part 2, trying combination levels,
+# smarter way is to impose the restrictions from day1 into this method to remove smarter but takes more coding work
+# it would limit the number of tries if required up to 5 additional calls instead of trying each level
+# 2 re-try checks in {check range} and 3 re-try checks in {check ascending / descending}
+def check_with_removal(level):
+    for i in range(len(level)):
+        mod_level = level[:i] + level[i+1:]
+        if check_level(mod_level):
+            return True
+    return False
+
+if __name__ == '__main__':
+    main()
