@@ -1,6 +1,5 @@
 plants = {}
 grid = []
-visited = set()
 directions = [
     (-1,0), (1,0), (0,-1), (0,1)
 ]
@@ -14,7 +13,7 @@ def create_2darray(path):
                 plants[plant_type] = []
 
 
-def bfs(row, col, plant_type) -> set:
+def bfs(row, col, plant_type, visited) -> list:
     rows, cols = len(grid), len(grid[0])
     start = row, col
     queue = [start]
@@ -37,12 +36,13 @@ def bfs(row, col, plant_type) -> set:
     return plot_sub_region
 
 def get_sub_regions():
+    visited = set()
     rows, cols = len(grid), len(grid[0])
     for row in range(rows):
         for col in range(cols):
             plant_type = grid[row][col]
             if (row, col) not in visited:
-                plot_sub_region = bfs(row, col, plant_type)
+                plot_sub_region = bfs(row, col, plant_type, visited)
                 plants[plant_type].append(plot_sub_region)
 
 def calculate_total_pricing():
@@ -59,6 +59,7 @@ def calculate_total_pricing():
 
 
 def calculate_perimeter(plot) -> int:
+    plot = set(plot)
     perimeter = 0
     for coordinate in plot:
         row, col = coordinate
@@ -69,7 +70,24 @@ def calculate_perimeter(plot) -> int:
                 perimeter += 1
 
     return perimeter
-    
+
+def calcualte_sides(plot) -> int:
+    # directional traversal, while following one edge -> increase perimeter by 0
+    # when changing directions, add 1 to side
+    visited = set()
+    start = plot[0]
+    plot = set(plot)
+    visited.add(start)
+    sides = 0
+    sides += travel_side(start, plot, directions[0], visited)
+
+def travel_side(start, plot, direction, visited):
+    #move in given direction
+    #when len(visited) = len(plot) then all nodes visited terminate
+    r, c = start
+    expl_row, expl_col = r + expl_row, c + expl_col
+
+
 
 create_2darray("input")
 get_sub_regions()
